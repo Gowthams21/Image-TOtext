@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <script src='https://unpkg.com/tesseract.js@v2.1.0/dist/tesseract.min.js'></script>
+    <title>Image To Text</title>
+</head>
+<body class="id">
+    <div>
+        <h1><span style="color: red; font-size: 70px;">I</span>mage To <span style="color: red; font-size: 70px;">T</span>ext</h1>
+    </div>
+    <div class="main">
+        <p id="text"></p>
+        <div class="child">
+            <label>
+                <input type="file" id="image" accept="image/*">
+            </label>
+        </div>
+        <div class="child">
+            <button id="btn">Convert To Text</button>
+        </div>
+        <div class="child">
+            <textarea id="textarea" class="hidden" cols="35"></textarea>
+        </div>
+      <footer id="checkAuthor">
+        <p>
+         Developed by
+          <a href="https://github.com/Gowthams21"
+            >Gowtham</a
+          >
+        </p>
+      </footer>
+    </div>
+</body>
+<script>
+    const image = document.getElementById('image');
+    const btn = document.getElementById('btn');
+    function loading() {
+        const text = document.getElementById('text');
+        text.classList.add('text');
+        text.innerHTML = 'Loading...';
+    }
+
+    btn.addEventListener('click', () => {
+        if (image.files.length === 0) {
+            alert('Please select an image');
+        } else {
+            const textArea = document.getElementById('textarea');
+            textArea.classList.add('hidden');
+            const file = image.files[0];
+        loading();
+        Tesseract.recognize(file)
+            .then(({ data: { text } }) => {
+                const a = document.createElement('a');
+                textArea.classList.remove('hidden');
+                textArea.value = text;
+                a.href = URL.createObjectURL(new Blob([text], { type: 'text/plain' }));
+                a.setAttribute('download', image.files[0].name.split('.')[0] + '.txt');
+                document.body.appendChild(a);
+                a.click();
+                const loadingText = document.getElementById('text');
+                loadingText.classList.remove('text');
+                loadingText.innerHTML = '';
+            })
+        }
+    })
+
+    const checkAuthor = document.getElementById("checkAuthor");
+    if (checkAuthor.children[0].children[0].textContent === "@Gauravtripathi") {
+    } else {
+      window.location.href = "#";
+    }
+</script>
+</html>
